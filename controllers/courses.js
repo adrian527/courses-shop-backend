@@ -1,61 +1,62 @@
-const { v4: uuid } = require('uuid');
+const {
+  v4: uuid
+} = require('uuid');
 
-const coursesData = [
-  {
+const coursesData = [{
     authors: ['Bartłomiej Borowczyk'],
     id: uuid(),
-    img: 'https://img-a.udemycdn.com/course/240x135/1673856_ff13_5.jpg',
+    img: 'https://websamuraj.pl/img/img-c1.png',
     price: 69.99,
     title: 'Web developer od podstaw w 15 dni',
   },
   {
     authors: ['Bartłomiej Borowczyk'],
     id: uuid(),
-    img: 'https://img-a.udemycdn.com/course/240x135/1844944_e2f8_3.jpg',
+    img: 'https://websamuraj.pl/img/img-c2.png',
     price: 69.99,
     title: 'Zaawansowany front-end w 15 dni',
   },
   {
     authors: ['Bartłomiej Borowczyk'],
     id: uuid(),
-    img: 'https://img-a.udemycdn.com/course/240x135/1916892_601a.jpg',
+    img: 'https://websamuraj.pl/img/img-c3.png',
     price: 69.99,
     title: 'Programowanie w JavaScript',
   },
   {
     authors: ['Bartłomiej Borowczyk', 'Mateusz Domański'],
     id: uuid(),
-    img: 'https://img-a.udemycdn.com/course/240x135/2049385_9a8c.jpg',
+    img: 'https://websamuraj.pl/img/img-c2.png',
     price: 69.99,
     title: 'React od podstaw - teoria i praktyka',
   },
   {
     authors: ['Bartłomiej Borowczyk'],
     id: uuid(),
-    img: 'https://img-a.udemycdn.com/course/240x135/2330558_0de2_2.jpg',
+    img: 'https://websamuraj.pl/img/img-c1.png',
     price: 69.99,
     title: 'Backend - Node.js, Express i MongoDB',
   },
   {
     authors: ['Bartłomiej Borowczyk'],
     id: uuid(),
-    img: 'https://img-a.udemycdn.com/course/240x135/2331806_b90c_2.jpg',
+    img: 'https://websamuraj.pl/img/img-c2.png',
     price: 69.99,
     title: '(Zaawansowane) Projekty w CSS i JavaScript',
   },
   {
     authors: ['Bartłomiej Borowczyk'],
     id: uuid(),
-    img: 'https://img-a.udemycdn.com/course/240x135/2258904_bd66_4.jpg',
+    img: 'https://websamuraj.pl/img/img-c3.png',
     price: 0,
     title: 'Wprowadzenie do Git i GitHub',
   },
   {
-    authors: ['Bartłomiej Borowczyk', 'Mateusz Domański', 'Michał Dziedziński', 'Kacper Sieradziński'],
+    authors: ['Bartłomiej Borowczyk', 'Mateusz Domański'],
     id: uuid(),
-    img: 'https://img-a.udemycdn.com/course/240x135/3428814_eee3_4.jpg',
+    img: 'https://websamuraj.pl/img/img-c1.png',
     price: 69.99,
-    title: 'Programowanie obiektowe w JavaScript - opanuj, tworząc gry!'
+    title: 'Programowanie obiektowe w JavaScript'
   }
 ];
 
@@ -74,19 +75,21 @@ exports.getCourses = (request, response, next) => {
 
 exports.getCourse = (request, response, next) => {
   try {
-    const { id } = request.params;
+    const {
+      id
+    } = request.params;
     const courseToSend = coursesData.find(course => course.id === id);
 
     if (!courseToSend) {
       response.status(404).json({
         message: 'Nie znaleziono kursu o podanym id',
       });
-      
+
       return;
     }
 
     response.status(200).json({
-      course: courseToSend, 
+      course: courseToSend,
     });
   } catch (error) {
     response.status(500).json({
@@ -98,8 +101,13 @@ exports.getCourse = (request, response, next) => {
 
 exports.postCourse = (request, response, next) => {
   try {
-    const { authors, img, price, title } = request.body;
-    if ( !authors || !price || !title ) {
+    const {
+      authors,
+      img,
+      price,
+      title
+    } = request.body;
+    if (!authors || !price || !title) {
       response.status(400).json({
         message: 'Nie podano wszystkich wymaganych informacji',
       });
@@ -107,7 +115,9 @@ exports.postCourse = (request, response, next) => {
       return;
     }
 
-    const isCourseExist = coursesData.some(({title: currentTitle}) => currentTitle === title);
+    const isCourseExist = coursesData.some(({
+      title: currentTitle
+    }) => currentTitle === title);
     if (isCourseExist) {
       response.status(409).json({
         message: `Istnieje już w bazie kurs ${title}`,
@@ -139,7 +149,12 @@ exports.postCourse = (request, response, next) => {
 
 exports.putCourse = (request, response, next) => {
   try {
-    const { authors, id, price, title } = request.body;
+    const {
+      authors,
+      id,
+      price,
+      title
+    } = request.body;
     if (!authors || !id || !price || !title) {
       response.status(400).json({
         message: 'Nie podano wszystkich wymaganych informacji',
@@ -153,11 +168,11 @@ exports.putCourse = (request, response, next) => {
       response.status(404).json({
         message: 'Nie znaleziono kursu o podanym id',
       });
-      
+
       return;
     }
-    
-    
+
+
     coursesData.splice(indexCourseToUpdate, 1, request.body);
 
     response.status(202).json({
@@ -173,7 +188,9 @@ exports.putCourse = (request, response, next) => {
 
 exports.deleteCourse = (request, response, next) => {
   try {
-    const { id } = request.params;
+    const {
+      id
+    } = request.params;
 
     console.log(id);
     const indexCourseToDelete = coursesData.findIndex(course => course.id === id);
@@ -182,7 +199,7 @@ exports.deleteCourse = (request, response, next) => {
       response.status(404).json({
         message: 'Nie znaleziono kursu o podanym id',
       });
-      
+
       return;
     }
 
